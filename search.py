@@ -1,13 +1,13 @@
 from mpi4py import MPI
 import numpy as np
 
-// describes all processes started by mpiexec
+# describes all processes started by mpiexec
 comm = MPI.COMM_WORLD
 
-// gives a process an int id
+# gives a process an int id
 rank = comm.Get_rank()
 
-// the number of processes in the group (mpi.comm_world)
+# the number of processes in the group (mpi.comm_world)
 size = comm.Get_size()
 
 sendbuf = None
@@ -21,6 +21,6 @@ if rank == 0:
 else:
     sendbuf = None
 
-recvbuf = np.empty(size, dtype='i')
+recvbuf = np.empty(int(40000/size), dtype='i')
 comm.Scatter(sendbuf, recvbuf, root=0)
 print('recvbuf on rank %d is: %s' % (rank,recvbuf))
