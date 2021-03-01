@@ -1,6 +1,20 @@
 from mpi4py import MPI
 import numpy as np
 
+# searches for the number 11 in an array, notifies other procs if found, and returns a tuple with index and proc rank
+def findTarget(rank, array):
+	targetTuple = None
+	array.sort()
+	
+	for i in range(len(array)):
+		if array[i] == 11:
+			#notifyProcs()
+			targetTuple = (rank, i)	
+			return targetTuple
+
+		elif array[i] > 11:
+			return None
+
 # describes all processes started by mpiexec
 comm = MPI.COMM_WORLD
 
@@ -9,6 +23,8 @@ rank = comm.Get_rank()
 
 # the number of processes in the group (mpi.comm_world)
 size = comm.Get_size()
+
+subArrSize = int(40000/size)
 
 sendbuf = None
 
@@ -21,6 +37,16 @@ if rank == 0:
 else:
     sendbuf = None
 
-recvbuf = np.empty(int(40000/size), dtype='i')
+
+# each subarray in recvbuf must be 40k/4 or subArrSize
+recvbuf = np.empty(subArrSize, dtype='i')
 comm.Scatter(sendbuf, recvbuf, root=0)
 print('recvbuf on rank %d is: %s' % (rank,recvbuf))
+targetTuple = findTarget(rank, recvbuf)
+
+if (targetTuple != None):
+    print("Process of rank %d found at index %d" % (targetTuple[0], targetTuple[1]))
+
+
+		
+
