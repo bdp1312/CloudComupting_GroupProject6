@@ -26,14 +26,15 @@ size = comm.Get_size()
 
 subArrSize = int(40000/size)
 
+
 sendbuf = None
 
 # master process
 if rank == 0:
-    sendbuf = np.loadtxt('data', dtype='i')
-    np.array_split(sendbuf, 4)
-    print(sendbuf)
-    #newbuf = np.array_split(sendbuf,4)
+    sendbuf = np.loadtxt('data.txt', dtype='i')
+    np.array_split(sendbuf, size)
+    #print(sendbuf)
+
 else:
     sendbuf = None
 
@@ -41,11 +42,13 @@ else:
 # each subarray in recvbuf must be 40k/4 or subArrSize
 recvbuf = np.empty(subArrSize, dtype='i')
 comm.Scatter(sendbuf, recvbuf, root=0)
-print('recvbuf on rank %d is: %s' % (rank,recvbuf))
 targetTuple = findTarget(rank, recvbuf)
-
 if (targetTuple != None):
-    print("Process of rank %d found at index %d" % (targetTuple[0], targetTuple[1]))
+    print("Process rank %d found 11 at index %d" % (targetTuple[0], targetTuple[1]))
+else:
+	print('Process rank %d ended at index %d' % (rank, recvbuf[0]))
+
+
 
 
 		
