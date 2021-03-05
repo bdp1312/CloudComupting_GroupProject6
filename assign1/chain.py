@@ -19,6 +19,7 @@ if rank == 0:
         else:
             print ("Process %d got %d" % (rank, value))
             comm.send(value, dest=rank + 1, tag = rank + 1)
+            comm.recv(source=size-1)
 elif rank == size - 1:
     while True:
         value = comm.recv(source = rank - 1, tag = rank)
@@ -26,6 +27,7 @@ elif rank == size - 1:
             exit()
         else:
             print ("Process %d got %d" % (rank, value))
+            comm.send(0, dest=0)
 else:
     while True:
         value = comm.recv(source = rank - 1, tag = rank)
