@@ -4,6 +4,7 @@
 #number from i-1, then pass it to i+1. At every process, the number and rank of the process will be printed out.
 
 from mpi4py import MPI
+from time import sleep
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -20,6 +21,7 @@ if rank == 0:
             print ("Process %d got %d" % (rank, value))
             comm.send(value, dest=rank + 1, tag = rank + 1)
             comm.recv(source=size-1)
+            sleep(1)
 elif rank == size - 1:
     while True:
         value = comm.recv(source = rank - 1, tag = rank)
