@@ -9,7 +9,7 @@ def findTarget(rank, array):
 	isFound = False
 	target = None
 	
-		
+	comm.Barrier()	
 	for i in range(len(array)):
 		
 		if req.Test() == True:
@@ -63,7 +63,7 @@ print('recvbuf on rank %d is: %s' % (rank,recvbuf))
 target = findTarget(rank, recvbuf)
 
 if (target != None):
-    print("Process of rank %d found at index %d" % (target[0], target[1]))
+    print("Process of rank %d found target of 11 at index %d" % (target[0], target[1]))
 
 
 		
