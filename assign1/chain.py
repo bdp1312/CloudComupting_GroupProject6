@@ -26,7 +26,7 @@ elif rank == size - 1:
         if value < 0:
             exit()
         else:
-            print ("Process %d got %d" % (rank, value))
+            print ("Process %d got %d" % (rank, value), flush=True)
             comm.send(0, dest=0)
 else:
     while True:
