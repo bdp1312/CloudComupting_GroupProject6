@@ -6,13 +6,20 @@ import sys
 # Skip header of CSV file
 next(sys.stdin)
 
+crimeCount = {}
+
 for line in reader(sys.stdin):
 	boro, crime = (line[13].strip(), line[7].strip())
 	
 	if not boro or not crime:
 		continue
-
-	#Rest of code
-	#print("Boro: "+boro+", Crime: "+crime+"\n")
-	# Map boro to trivial value of 1 for reducing later
-	print("%s\t%s" % (boro, 1))
+	
+	#Increment how many crimes were committed in the given boro
+	if boro not in crimeCount:
+		crimeCount[boro] = 1
+	else:
+		crimeCount[boro] += 1
+	
+#Output the total for each boro to the reducer task
+for key in crimeCount:
+	print("%s\t%s" % (key, crimeCount[key]))
