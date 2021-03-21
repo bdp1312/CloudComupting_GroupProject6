@@ -6,7 +6,8 @@ import sys
 # Skip header of CSV file
 next(sys.stdin)
 
-crimeCount = {}
+crime_count = {}
+boro_crimes = {}
 
 for line in reader(sys.stdin):
 	boro, crime = (line[13].strip(), line[7].strip())
@@ -15,11 +16,20 @@ for line in reader(sys.stdin):
 		continue
 	
 	#Increment how many crimes were committed in the given boro
-	if boro not in crimeCount:
-		crimeCount[boro] = 1
+	if boro not in crime_count:
+		crime_count[boro] = 1
 	else:
-		crimeCount[boro] += 1
+		crime_count[boro] += 1
 	
+	#Make a list of all the crimes committed by boro
+	if boro not in boro_crimes:
+		boro_crimes[boro] = {crime} #New set if there is not already one
+	else:
+		boro_crimes[boro].add(crime) #Add to existing set of crimes otherwise
+
+
 #Output the total for each boro to the reducer task
-for key in crimeCount:
-	print("%s\t%s" % (key, crimeCount[key]))
+for key in crime_count:
+	#Build the list of crimes for the current boro, separated by tabs
+	crime_list = "\t".join(boro_crimes[key])
+	print("%s\t%s\t%s" % (key, crime_count[key], crime_list))
